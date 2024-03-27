@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ msgs.suggest_form_title }}
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href='{% static "resources/suggest-resource.css" %}' />
+{% endblock %}
+
+{% block content %}
+<h1>{{ msgs.suggest_form_title }}</h1>
+<form id="submitSuggestionForm" method="POST" novalidate style="text-align:right">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="form-control {% if form.title.errors %}errors{% endif %}">
+            <div class="label-container">
+                {{ field.label_tag }}&nbsp;
+            </div>
+            <div class="field-container">
+                {{ field.errors}}
+                {{ field }}
+            </div>
+        </div>
+    {% endfor %}
+    <br>
+    <button type="submit" id="btnSubmitSuggestionForm">{{ msgs.submit }}</button>
+    <button type="button">{{ msgs.cancel }}</button>
+</form>
+
+<script>
+    $('#id_book, label[for="id_book"]').closest('.form-control').hide();
+    $('#id_isbn, label[for="id_isbn"]').closest('.form-control').hide();
+    $('#id_journal, label[for="id_journal"]').closest('.form-control').hide();
+    $('#id_journal_issue, label[for="id_journal_issue"]').closest('.form-control').hide();
+    $('#id_resource_status').val("1");
+
+    prependAsteriskToRequiredFieldLabels();
+
+    document.getElementById("btnSubmitSuggestionForm").addEventListener("click", function(event) {
+        validateFormSubmission(event, 'submitSuggestionForm');
+    });
+
+    //document.getElementById("btnSubmitReviewTop").addEventListener("click", function(event) {
+    //    validateFormSubmission(event, 'reviewForm');
+    //});
+
+</script>
+
+{% endblock %}

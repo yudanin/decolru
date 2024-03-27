@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ r.title }}
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static "resources/resource-details.css" %}" />
+{% endblock %}
+
+{% block content %}
+
+<section id="summary">
+    <article>
+        {% if r.img_file %}
+            <img src="{% static 'resources/images/'|add:r.img_file %}" alt="{{ r.title }}">
+        {% endif %}
+        <h2>{{ r.title }}</h2>
+        {% if r.subtitle %}
+            <h3>{{ r.subtitle }}</h3>
+        {% endif %}
+        {% if r.authors_full_name_lat %}
+            <p>
+                {{ r.authors_full_name_lat }}
+            </p>
+        {% endif %}
+        {% if r.editors_full_name_lat %}
+            <p>
+                {{ r.editors_full_name_lat }}&nbsp;({{ msgs.suggested_editors }})
+            </p>
+        {% endif %}
+        {% if r.lang.lang_name %}
+            <p>
+                {{ msgs.lang }}:&nbsp;{{ r.lang.lang_name }}
+            </p>
+        {% endif %}
+        <p><i>{{ type }}</i></p>
+        {% if r.isbn %}
+        <p>ISBN:&nbsp;{{ r.isbn }}</p>
+        {%  endif %}
+        <p>{{ msgs.resourcecreated}}: <time>{{ r.date_created }}</time></p>
+        <p>{{ msgs.addedtolib}}: <time>{{ r.date_added_to_lib }}</time></p>
+        {% if r.resource_link %}
+        <a href="{{ r.resource_link }}" target="_blank">{{ r.resource_link }}</a>
+        {% endif %}
+
+
+        <p>{{ r.tags }}</p>
+    </article>
+</section>
+
+{% if r.description %}
+    <main>
+        <p>{{ r.description|linebreaks }}</p>
+    </main>
+{% endif %}
+<br>&nbsp;<br>&nbsp;<br>
+{% endblock %}

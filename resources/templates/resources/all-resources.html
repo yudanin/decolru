@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{{msgs.allresources}}
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static "resources/index.css" %}" />
+{% endblock %}
+
+{% block content %}
+
+<section id="all-resoruces">
+    <h2 style="margin-left:10px">{{ msgs.allresources }}</h2>
+    <div class="grid-container">
+        {% for r in resources %}
+            {% include "resources/includes/item.html" %}
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+#summary {
+  margin: 1rem auto 1rem auto;
+  width: 90%;
+  max-width: 90rem;
+}
+
+#summary h2 {
+  color: black;
+  font-size: 2.5rem;
+  margin-left: 0rem;
+  margin-bottom: 0rem;
+}
+
+#summary h3 {
+  color: black;
+  font-size: 1.5rem;
+  margin-left: 0rem;
+  margin-top: 0.5rem;
+}
+
+#summary article {
+  text-align: left;
+  color: black;
+}
+
+#summary article img {
+  width: 100%;
+}
+
+#summary address {
+  font-weight: bold;
+}
+
+#summary time {
+  font-weight: normal;
+}
+
+main {
+  width: 90%;
+  max-width: 90rem;
+  margin: 1rem auto;
+  background-color: white;
+  padding: 1rem;
+  /* border-radius: 12px; */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}

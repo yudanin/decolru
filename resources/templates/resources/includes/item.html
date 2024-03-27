@@ -1,0 +1,62 @@
+{% load static %}
+{% load filters %}
+
+<article class="grid-item">
+    <table id="item">
+        <tr>
+            <td>
+                <a href="{% url 'resource-details' r.slug %}" target="_blank" class="grid-item__link">
+                    {% if r.img %}
+                        <img src="{{ r.img.url }}" alt="{{ r.title }}" />
+                    {% else %}
+                        {% if r.img_file %}
+                            <img src="{% static 'resources/images/'|add:r.img_file %}" alt="{{ r.title }}" />
+                        {% else %}
+                            <div class="image-replacement">
+                                <b>{{ r.title|slice:":18" }}</b>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    <div class="grid-item__content">
+                        <p>
+                            <b>{{ r.title }}</b>
+                            {% if r.subtitle %}
+                                <br>{{ r.subtitle }}
+                            {% endif %}
+                        </p>
+                        {% if r.authors_full_name %}
+                            <p>
+                                {{ r.authors_full_name }}
+                            </p>
+                        {% endif %}
+                        {% if r.editors_full_name %}
+                            <p>
+                                {{ r.editors_full_name }}&nbsp;({{ msgs.suggested_editors }})
+                            </p>
+                        {% endif %}
+                        <p>
+                            {% if r.description %}
+                                {{ r.description|slice:":255" }}...
+                                <b>{{ msgs.seemore }}</b>
+                            {% endif %}
+                        </p>
+                    </div>
+                </a>
+            </td>
+        </tr>
+        {% if r.resource_link %}
+        <tr>
+            <td>
+                <a href="{{ r.resource_link }}" style="margin-left:10px;color: blue;text-decoration: underline;" target="_blank">{{ msgs.link }}</a>
+            </td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td>
+                <div id="tags" class="grid-item__content tags">
+                    <p>{{ r.tags }}</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+</article>

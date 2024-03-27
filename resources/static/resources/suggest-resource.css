@@ -1,0 +1,178 @@
+body{
+    margin: 0px;
+    font-family: sans-serif;
+}
+
+h1, p {
+    margin-left: 3rem;
+}
+
+form {
+    margin: 1rem 3rem 3rem 3rem;
+    width: 90%;
+    max-width: 75rem;
+    padding: 1rem;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.26);
+    border-radius: 10px;
+}
+
+button{
+    cursor: pointer;
+    padding: 0.5rem 1.5rem;
+    border-radius: 10px;
+    background-color: #084958;
+    color: white;
+    border: 1px solid #084958;
+}
+
+button:hover,
+button:active{
+    background-color: #026d84;
+    border: 1px solid #026d84;
+}
+
+.form-control {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.form-control input, textarea, select {
+    font: inherit;
+    padding: 0.25rem;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.form-control input:focus, textarea:focus {
+    border-color: #084958;
+    background-color: #bce8ff;
+}
+
+.form-control label{
+    display: inline-block;
+}
+
+.errorlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    color: red;
+}
+
+.errors input{
+    border-color: red;
+    background-color: #fde3e3;
+}
+
+textarea:invalid,
+input:invalid {
+    border-color: red;
+    background-color: #fde3e3;
+}
+
+.label-container,
+.field-container {
+    flex: 1;
+    box-sizing: border-box;
+}
+
+.label-container {
+    max-width:20%;
+}
+
+.field-container {
+    max-width:77%;
+}
+
+.field-container input, textarea, select {
+    width: 100%;
+}
+
+/* Review page */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.title {
+  height: 5rem;
+  width: 100%;
+  /* background-color: #ffea00; */
+  /* border: 2px solid #9f0700; */
+  padding: 0.25rem;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: center;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: row;
+  flex: 1; /* Allow the content container to grow vertically */
+}
+
+.sidebar {
+  width: 20%;
+  overflow-y: auto;
+  border-right: 1px solid gray;
+  padding:0.5rem;
+}
+
+.main {
+  width: 80%;
+  overflow-y: auto;
+}
+
+#suggestions-list a {
+  text-decoration: none;
+  color: #005493;
+  font-weight: bold;
+}
+
+#suggestions-list a:hover,
+#main-navigation a:active {
+  color: #cf79f1;
+}
+
+#suggestions-list ul {
+  list-style-type: none;
+  padding: 0rem;
+  margin-left: 1rem;
+}
+
+#suggestions-list li {
+  margin-bottom: 0.5rem;
+}
+
+.authors-multiselect {
+    appearance: none;
+    -webkit-appearance: none; /* For older webkit browsers */
+    -moz-appearance: none; /* For older Firefox */
+}
+
+.authors-multiselect option {
+    padding: 5px 10px; /* Add padding */
+}
+
+/* Style for the checkboxes */
+.authors-multiselect option::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    border: 1px solid #3498db;
+    border-radius: 2px;
+}
+
+.authors-multiselect option:checked::before {
+    background-color: #074958;
+}

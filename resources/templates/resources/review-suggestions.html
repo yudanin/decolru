@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  Review Suggestions
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href='{% static "resources/suggest-resource.css" %}' />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="title">
+      <div>
+        <img src="{% static 'resources/images/'|add:'leone.png'' %}" alt="Venetian lion" height="75" style="margin-left:0.25rem">
+      </div>
+      <div>
+          <h1 style="margin-left:1rem;margin-right:1rem;font-size:4rem;font-weight:lighter;color:074958;padding-bottom:0.5rem">Review Suggestions</h1>
+      </div>
+  </div>
+  <div class="content-container">
+      <div id="suggestions-list" class="sidebar">
+        <button id="add_resource" style="width:100%" onclick="addNewResource()">ADD NEW RESOURCE</button>
+        <ul id="suggestions-ul">
+        </ul>
+      </div>
+      <div class="main">
+          <form id="reviewForm" name="reviewForm" method="POST" enctype="multipart/form-data" novalidate style="text-align:right;margin-bottom:1.5rem">
+              {% csrf_token %}
+              <table style="width:100%;borders:none;margin-bottom:1rem">
+                  <tr>
+                      <td id="new_resource_heading" style="width:75%;text-align:left;color:#ac0d00;font-weight:bold;font-size:1.5rem">
+                          NEW RESOURCE
+                      </td>
+                      <td>
+                          <button id="btnSubmitReviewTop" type="submit">SAVE</button>
+                      </td>
+                  </tr>
+              </table>
+              <input type="hidden" id="id_id" name="id" value="">
+              <div class="form-control {% if form.title.errors %}errors{% endif %}">
+                <div class="label-container">
+                    Submitted on:&nbsp;
+                </div>
+                <div class="field-container">
+                    <input type="text" id="id_date_submitted" name="date_submitted">
+                </div>
+              </div>
+
+              {% for field in form %}
+                <div class="form-control {% if form.title.errors %}errors{% endif %}">
+                    <div class="label-container">
+                        {{ field.label_tag }}&nbsp;
+                    </div>
+                    <div class="field-container">
+                        {{ field.errors}}
+                        {{ field }}
+                    </div>
+                </div>
+              {% endfor %}
+              <br>
+              <button id="btnSubmitReviewBottom" type="submit">SAVE</button>
+          </form>
+      </div>
+  </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const suggestionsUl = document.getElementById("suggestions-ul");
+        const suggestions_json = JSON.parse('{{ suggestions_json|escapejs }}');
+
+        //Prepend asterisk to required fields' labels
+        prependAsteriskToRequiredFieldLabels();
+
+        // Iterate over suggestions_json and create list items
+        suggestions_json.forEach(suggestion => {
+            const li = document.createElement("li");
+            li.setAttribute("data-id", suggestion.id);
+            li.textContent = suggestion.title;
+            suggestionsUl.appendChild(li);
+
+            // Add click event listener to each list item
+            li.addEventListener("click", function() {
+                const suggestionId = parseInt(this.dataset.id);
+                const selectedSuggestion = suggestions_json.find(s => s.id === suggestionId);
+
+                // load the selected suggestion into the form
+                loadSuggestionIntoForm(selectedSuggestion);
+            });
+        });
+
+        //load first suggestion into the form
+        if (suggestions_json.length > 0) {
+            loadSuggestionIntoForm(suggestions_json[0]);
+        }
+
+    });
+
+    // add event listener to the review form submit button (top)
+    document.getElementById("btnSubmitReviewTop").addEventListener("click", function(event) {
+        validateFormSubmission(event, 'reviewForm');
+    });
+
+    // add event listener to the review form submit button (bottom)
+    document.getElementById("btnSubmitReviewBottom").addEventListener("click", function(event) {
+        validateFormSubmission(event, 'reviewForm');
+    });
+
+    // load suggestion into the review form
+    function loadSuggestionIntoForm(s) {
+
+        document.getElementById('new_resource_heading').innerHTML = "";
+
+        //Do not load data into these fields
+        const excludedFields = ['img_file', 'date_added_to_lib'];
+
+        //Specify fields for removing trailing _id
+        remove_id = {'resource_status_id':'resource_status', 'type_id':'type', 'lang_id':'lang'}
+
+        for (const key in s) {
+            if(!excludedFields.includes(key)) {
+                try {
+                    //remove trailing id if needed
+                    if (key in remove_id) {
+                        eid = "id_" + remove_id[key];
+                    } else {
+                        eid = "id_" + key;
+                    }
+
+                    const element = document.getElementById(eid);
+                    if (element) {
+                        switch(key) {
+                            case 'authors':
+                            case 'editors':
+                                const selectedOptions = [];
+
+                                // Clear existing selections
+                                Array.from(element.options).forEach(option => {option.selected = false;});
+                                // Set selected authors based on suggestion data
+                                const authorIds = s[key];
+                                authorIds.forEach(authorId => {
+                                    const option = element.querySelector(`option[value='${authorId}']`);
+                                    if (option) {
+                                        option.selected = true;
+                                        selectedOptions.push(option);
+                                    }
+                                });
+
+                                // Move selected options to the top of the select
+                                selectedOptions.forEach(option => {
+                                    element.removeChild(option); // Remove option from its current position
+                                    element.insertBefore(option, element.firstChild); // Insert option at the beginning of the select element
+                                });
+                                break;
+                            case 'resource_file':
+                            case 'img':
+                                if(s[key]) {
+                                    const baseURL = window.location.origin;
+                                    const currUrl = "<a href='" + baseURL + "/media/" + s[key] + "' target=_blank>Current file</a>"
+                                    element.insertAdjacentHTML("beforebegin", currUrl);
+                                }
+                                break;
+                            default:
+                                setValue(element, s[key]);
+                        }
+                    } else {
+                        console.error('Failed to find element [' + eid +']');
+                    }
+                } catch (error) {
+                    console.error('Error setting value for element [' + eid + ']: ' + error.message);
+                }
+            }
+        }
+
+    } //(loadSuggestionIntoForm)
+
+</script>
+
+{% endblock %}

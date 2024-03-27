@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'app.css' %}"/>
+    <link rel="icon" type="images/x-icon" href="{% static 'images/favicon.ico' %}">
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'js/func.js' %}"></script>
+    {% block css_files %}{% endblock %}
+</head>
+<body>
+    <header id="main-navigation">
+        <nav>
+            <table style="width:100%;border:none;">
+                <tr>
+                    <td style="width:80%">
+                        <a href="{% url 'index' %}">{{ msgs.home }}</a>
+                        &nbsp;&nbsp;&nbsp;
+                        <a href="{% url 'resources' %}">{{ msgs.allresources }}</a>
+                    </td>
+                    <td style="width:20%;text-align:right;padding-right:2rem;">
+                        <form id="lang-form" class="form-lang-select" action="/resources/langs" method="post">
+                            {% csrf_token %}
+                            <select id="lang-select" name="lang_id">
+                                {% for id, lang_name in langs.items %}
+                                    {% if id|add:"0" == msgs.language_code|add:"0" %}
+                                        <option value="{{ id }}" selected>{{ lang_name }}</option>
+                                    {% else %}
+                                        <option value="{{ id }}">{{ lang_name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </nav>
+    </header>
+    {% block content %}
+    {% endblock %}
+</body>
+
+<script>
+    document.getElementById('lang-select').addEventListener('change', function() {
+        document.getElementById('lang-form').submit(); // Submit the form when a language is selected
+    });
+</script>
+
+</html>

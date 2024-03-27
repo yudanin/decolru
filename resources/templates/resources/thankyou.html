@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ msgs.resource_thank_you_title }}
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href='{% static "resources/suggest-resource.css" %}' />
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ msgs.resource_thank_you_title }}</h1>
+<p>{{ msgs.resource_thank_you_text }}</p>
+<div style="width:100%;text-align:center;margin-top:5rem">
+    <button id="new_resource" onclick="suggestNewResource()">{{ msgs.submit_another_resource }}</button>
+</div>
+{% endblock %}

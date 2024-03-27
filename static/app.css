@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Open+Sans:wght@400;700&display=swap');
+
+html {
+  font-family: 'Open Sans', 'Lato', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding-top: 2.5rem;
+  background-color: #ffffdd;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Lato', sans-serif;
+  font-weight: bold;
+  margin-left: 0px;
+}
+
+#main-navigation {
+  width: 100%;
+  height: 2.5rem;
+  display: block;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 2%;
+  padding-top: 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #ffffdd;
+}
+
+#main-navigation a {
+  text-decoration: none;
+  color: #005493;
+  font-weight: bold;
+}
+
+#main-navigation a:hover,
+#main-navigation a:active {
+  color: #cf79f1;
+}
+
+#main-navigation h1 a:hover,
+#main-navigation h1 a:active {
+  color: white;
+}
+
+
+/* Resources' list */
+
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+}
+
+.grid-item {
+    width: calc(33.33% - 20px); /* 20px is the total margin space between items */
+    margin: 10px;
+    box-sizing: border-box;
+    background-color: white;
+    border: 1px solid #c2c2c2;
+    box-shadow: 3px 3px #c2c2c2;
+
+    position: relative;
+}
+
+.grid-item img {
+  width: 100%;
+  height: 7rem;
+  object-fit: cover;
+}
+
+.grid-item a {
+  text-decoration: none;
+  color: black;
+}
+
+.grid-item__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.grid-item:hover,
+.grid-item:active {
+  transform: scale(1.05);
+  z-index:100;
+  border: 2px solid blue;
+}
+
+
+.grid-item__content{
+    margin: 10px;
+}
+
+#item {
+   width:100%;
+   border-collapse: collapse;
+   height:100%;
+}
+
+#item td {
+   padding: 0;
+   margin: 0;
+}
+
+.image-replacement {
+    width:100%;
+    height:7rem;
+    background-color:#ac0d00;
+    color:#ffffdd;
+    font-size:3rem;
+}
+
+@media screen and (max-width: 768px) {
+    .grid-item {
+        width: calc(100% - 20px);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .grid-item {
+        width: 100%;
+    }
+}
+
+
+#lang-select {
+    width: auto;
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: transparent;
+    font-size: 16px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: none; /* Remove any existing background image */
+}
+
+/* Style the select dropdown arrow */
+#lang-select::-ms-expand {
+    display: none;
+}
+
+.form-lang-select {
+    margin: 0px;
+    padding: 0px;
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0px;
+}
+
+
+
+

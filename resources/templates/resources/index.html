@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Decolonization Resources
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static "resources/index.css" %}" />
+{% endblock %}
+
+{% block content %}
+
+    <section id="welcome">
+        <header>
+            <div class="left-section">
+                <img src="{% static 'resources/images/decolru.png' %}" alt="Russian Colonialism - Resource Library" />
+            </div>
+            <div class="right-section">
+                <h1>{{ msgs.libtitle }}</h1>
+                <p>{{ msgs.welcome }}</p>
+            </div>
+        </header>
+    </section>
+
+    <section id="latest" style="margin:10px">
+        <h2>{{ msgs.recentadditions }}</h2>
+        <div class="grid-container">
+            {% for r in resources %}
+                {% include "resources/includes/item.html" %}
+            {% endfor %}
+        </div>
+
+    </section>
+
+    <section id="bottom" style="margin:10px">
+        <h2>What it's all about?</h2>
+        <p>
+            This is a library of resources on Russian colonialism.
+        </p>
+    </section>
+
+{% endblock %}
