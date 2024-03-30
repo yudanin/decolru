@@ -1,4 +1,4 @@
-This repo containg a word in progress on the resource library on Russian Colonialism. Build in Pythoin Django with a MySQL backend, it will eventually allow:
+This repo containg a work in progress on the resource library on Russian Colonialism. Build in Pythoin Django with a MySQL backend, it will eventually allow:
 1. Browsing resources
 2. Search
 3. Suggesitng new resources
