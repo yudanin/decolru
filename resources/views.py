@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.http import Http404
-#from django.db import connection, models
-from django.http import HttpResponseRedirect #, HttpResponse
+# from django.db import connection, models
+from django.http import HttpResponseRedirect  # , HttpResponse
 from django.utils import timezone
 from django.views import View
 from datetime import datetime
@@ -11,7 +11,7 @@ from .utils import get_msgs, get_language_code, generate_slug, langs
 from .models import Resources, ResourceStatuses, ResourceTypes, Langs, AuthorsXResources
 from django.views.generic.base import TemplateView
 import json
-#import os
+# import os
 from django.core.serializers.json import DjangoJSONEncoder
 
 
@@ -83,7 +83,6 @@ class SuggestResourceView(View):
             # Save the resource instance
             resource.save()
 
-            #return HttpResponseRedirect(reverse('thankyou'))
             return render(request, 'resources/thankyou.html', {'msgs': get_msgs(request), 'langs': langs})
         else:
             print('Form errors:', form.errors)
@@ -106,9 +105,14 @@ class ReviewSuggestions(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        extra_context = {"msgs": get_msgs(self.request), "langs": langs}
-        draft_status = ResourceStatuses.objects.get(id=1)
-        suggestions = Resources.objects.filter(resource_status=draft_status)
+
+        status_id = self.request.GET.get('status_id')
+        if not status_id:
+            status_id = 1
+
+        status = ResourceStatuses.objects.get(id=status_id)
+        all_statuses = ResourceStatuses.objects.all()
+        suggestions = Resources.objects.filter(resource_status=status)
 
         # suggest slugs
         [setattr(suggestion, 'slug', generate_slug(suggestion.title)) for suggestion in suggestions if
@@ -140,21 +144,21 @@ class ReviewSuggestions(TemplateView):
 
         msgs = get_msgs(self.request)
 
-        #form = ReviewSuggestedResource(msgs=msgs, langs=self.request.langs)
-        form = ReviewSuggestedResource(msgs=msgs,langs=langs)
+        form = ReviewSuggestedResource(msgs=msgs, langs=langs)
 
         context['msgs'] = get_msgs(self.request)
         context['langs'] = langs
+        context['all_statuses'] = all_statuses
         context["form"] = form
 
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         msgs = get_msgs(request)
         form = ReviewSuggestedResource(request.POST, request.FILES, msgs=msgs, langs=langs)
+
         if form.is_valid():
             resource_id = int(request.POST.get('id'))  # 0 for new resource
-
             if resource_id == 0:
                 # if adding a new resource - instantiate class
                 resource = Resources()
@@ -163,9 +167,13 @@ class ReviewSuggestions(TemplateView):
                 resource = get_object_or_404(Resources, pk=resource_id) if resource_id else None
 
             if resource_id != 0:
-                form = ReviewSuggestedResource(request.POST, instance=resource, msgs=get_msgs(request))
+                form = ReviewSuggestedResource(request.POST, request.FILES, instance=resource, msgs=get_msgs(request),
+                                               langs=langs)
             else:
-                form = ReviewSuggestedResource(request.POST, msgs=get_msgs(request))
+                form = ReviewSuggestedResource(request.POST, request.FILES, msgs=get_msgs(request), langs=langs)
+
+            for field_name, errors in form.errors.items():
+                print(f'Errors for field {field_name}: {errors}')
 
             if form.is_valid():
                 resource = form.save(commit=False)
@@ -207,14 +215,26 @@ class ReviewSuggestions(TemplateView):
                         AuthorsXResources.objects.create(author=a, resource=resource, type_of=d[k])
 
                 return HttpResponseRedirect(reverse('review-suggestions'))
-        else:
-            print('Form errors:', form.errors)
-            draft_status = ResourceStatuses.objects.get(id=1)
-            suggestions = Resources.objects.filter(resource_status=draft_status)
-            suggestions_json = json.dumps(list(suggestions.values()), cls=DjangoJSONEncoder)
-            return render(request, self.template_name,
-                          {'form': form, 'msgs': get_msgs(request), 'langs': langs,
-                           'suggestions_json': suggestions_json})
+            else:
+                print('Form errors:')
+                print(form.errors)
+
+                print('Form non-field errors:')
+                print(form.non_field_errors())
+
+                for field_name, errors in form.errors.items():
+                    print(f'Errors for field {field_name}: {errors}')
+
+                status_id = self.request.GET.get('status_id')
+                if not status_id:
+                    status_id = 1
+                status = ResourceStatuses.objects.get(id=status_id)
+                all_statuses = ResourceStatuses.objects.all()
+                suggestions = Resources.objects.filter(resource_status=status)
+                suggestions_json = json.dumps(list(suggestions.values()), cls=DjangoJSONEncoder)
+                return render(request, self.template_name,
+                              {'form': form, 'msgs': get_msgs(request), 'langs': langs,
+                               'suggestions_json': suggestions_json, 'all_statuses': all_statuses})
 
 
 class SelectLanguageView(View):

@@ -16,7 +16,15 @@
         <img src="{% static 'resources/images/'|add:'leone.png'' %}" alt="Venetian lion" height="75" style="margin-left:0.25rem">
       </div>
       <div>
-          <h1 style="margin-left:1rem;margin-right:1rem;font-size:4rem;font-weight:lighter;color:074958;padding-bottom:0.5rem">Review Suggestions</h1>
+          <h1 id="review_title" style="margin-left:1rem;margin-right:1rem;font-size:4rem;font-weight:lighter;color:074958;padding-bottom:0.5rem">Review Suggestions</h1>
+      </div>
+      <div id="status" style="margin-left: auto;padding-right:2rem">
+          <label for="select_status" style="float: left;">Filter by status:</label>
+          <select id="select_status" name="select_status" style="float: left;">
+            {% for status in all_statuses %}
+                <option value="{{ status.id }}">{{ status.description }}</option>
+            {% endfor %}
+          </select>
       </div>
   </div>
   <div class="content-container">
@@ -95,6 +103,27 @@
         if (suggestions_json.length > 0) {
             loadSuggestionIntoForm(suggestions_json[0]);
         }
+
+        const selectStatus = document.getElementById("select_status");
+
+        // Add event listener to detect changes in the select element
+        selectStatus.addEventListener("change", function() {
+            const selectedStatusId = this.value; // Get the selected status_id
+
+            // Reload the page with the selected status_id as a query parameter
+            window.location.href = window.location.pathname + "?status_id=" + selectedStatusId;
+        });
+
+        //Set the value of filter-by-status select
+        const urlParams = new URLSearchParams(window.location.search); // Get the value of the 'status_id' query parameter from the URL
+        if(urlParams=='')
+            urlParams = 1;
+        const statusId = urlParams.get('status_id');
+        const selectFilterByStatus = $('#select_status');
+        selectFilterByStatus.val(statusId);
+
+        const selectedOptionText = selectFilterByStatus.find('option:selected').text();
+        $('#review_title').text('Review ' + selectedOptionText);
 
     });
 

@@ -12,8 +12,6 @@ class SuggestResourceForm(forms.ModelForm):
         self.msgs = msgs
         self.language_code = msgs['language_code']
 
-        print(self.msgs)
-
         self.fields['title'].label = msgs['suggest_title']
         self.fields['title'].error_messages = {'required': msgs['suggest_title'] + ' ' + msgs['error_required']}
 
@@ -96,14 +94,17 @@ class SuggestResourceForm(forms.ModelForm):
 class ReviewSuggestedResource(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super().__init__()
         msgs = kwargs.pop('msgs')
-        resource_instance = kwargs.pop('instance', None)
-        #language_code = kwargs.pop('language_code')
+        langs = kwargs.pop('langs')
+
+        if 'instance' in kwargs:
+            resource_instance = kwargs.pop('instance', None)
+
+        super().__init__(*args, **kwargs)
+
         self.msgs = msgs
-        #self.language_code = language_code
         self.language_code = msgs['language_code']
-        self.langs = kwargs.pop('langs')
+        self.langs = langs
 
     title = forms.CharField(label=msgs['suggest_title'],
                             max_length=255,
